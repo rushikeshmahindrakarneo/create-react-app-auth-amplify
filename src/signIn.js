@@ -101,7 +101,7 @@ class SignIn extends Component {
                 this.setState(updateByPropertyName("email", event.target.value))
               }
               type="text"
-              placeholder="Email Address"
+              placeholder="Email Address s"
             />
             <input
               style={styles.input}
