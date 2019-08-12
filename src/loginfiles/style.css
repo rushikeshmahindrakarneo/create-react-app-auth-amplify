@@ -11,7 +11,9 @@ html, body {height: 100%;}
 .navbar-nav>li:last-child::after{display: none;}
 .navbar-default .navbar-nav>li>a{padding: 0; color: #575656; transition: all 0.5s ease; -moz-transition: all 0.5s ease; -webkit-transition: all 0.5s ease; -o-transition: all 0.5s ease; -ms-transition: all 0.5s ease;}
 .navbar-default .navbar-nav>li>a:hover{color: #cd0438; transition: all 0.5s ease; -moz-transition: all 0.5s ease; -webkit-transition: all 0.5s ease; -o-transition: all 0.5s ease; -ms-transition: all 0.5s ease;}
+.navbar-default .navbar-nav>li>a.active{color: #cd0438; transition: all 0.5s ease; -moz-transition: all 0.5s ease; -webkit-transition: all 0.5s ease; -o-transition: all 0.5s ease; -ms-transition: all 0.5s ease;}
 .navbar-default .navbar-nav>li>a::after{content: ""; width: 10px; height: 1px; opacity: 0; background: #cd0438; position: absolute; bottom: 0; left: 0; right: 0; margin: auto; transition: all 0.5s ease; -moz-transition: all 0.5s ease; -webkit-transition: all 0.5s ease; -o-transition: all 0.5s ease; -ms-transition: all 0.5s ease;}
+
 .navbar-default .navbar-nav>li>a:hover::after{width: 100%; opacity: 1; transition: all 0.5s ease; -moz-transition: all 0.5s ease; -webkit-transition: all 0.5s ease; -o-transition: all 0.5s ease; -ms-transition: all 0.5s ease;}
 .navbar-default .navbar-toggle{border: none;}
 .navbar-default .navbar-toggle .icon-bar{background: #231f20; width: 25px; height: 4px;}

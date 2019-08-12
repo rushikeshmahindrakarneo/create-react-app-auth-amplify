@@ -5,37 +5,25 @@ import { Auth } from "aws-amplify";
 import './loginfiles/bootstrap.min.css'
 import './loginfiles/style.css'
 import './loginfiles/responsive.css'
+import en from './loginfiles/en.json';
+import fr from './loginfiles/fr.json';
+import es from './loginfiles/es.json';
+import PropTypes from 'prop-types';
+ 
+// Translation Higher Order Component
+import {
+  setTranslations,
+  setDefaultLanguage,
+  setLanguageCookie,
+  setLanguage,
+  translate,
+} from 'react-switch-lang';
 
 
+setTranslations({ en, fr,es });
+setDefaultLanguage('en');
+setLanguageCookie();
 
-
-// const styles = {
-//   continer: {
-//     display: "flex",
-//     flexDirection: "column",
-//     justifyContent: "center",
-//     alignItems: "center"
-//   },
-//   input: {
-//     width: "100%",
-//     padding: "12px 20px",
-//     margin: "8px 0",
-//     display: "inline-block",
-//     border: "1px solid #ccc",
-//     borderRadius: "4px",
-//     boxSizing: "border-box"
-//   },
-//   submit: {
-//     width: "100%",
-//     backgroundColor: "#4CAF50",
-//     color: "white",
-//     padding: "14px 20px",
-//     margin: "8px 0",
-//     border: "none",
-//     borderRadius: "4px",
-//     cursor: "pointer"
-//   }
-// };
 
 const updateByPropertyName = (propertyName, value) => () => ({
   [propertyName]: value
@@ -44,6 +32,8 @@ const updateByPropertyName = (propertyName, value) => () => ({
 const INITIAL_STATE = {
   email: "",
   password: "",
+  companyname:"",
+  language:'en',
   error: null
 };
 
@@ -53,15 +43,18 @@ class SignIn extends Component {
 
     this.state = { ...INITIAL_STATE };
   }
-
+  handleSetLanguage = (key) => () => {
+    this.setState({language:key})
+    setLanguage(key);
+  };
   changeState(type, event) {
     const { changeAuthState } = this.props;
     changeAuthState(type, event);
   }
 
   onSubmit = event => {
-    const { email, password } = this.state;
-
+    const { email, password,companyname } = this.state;
+console.log(companyname);
     Auth.signIn(email, password)
       .then(user => {
         console.log(user);
@@ -98,13 +91,15 @@ class SignIn extends Component {
   };
 
   render() {
-    const { email, password, error } = this.state;
+
+
+    const { email, password, companyname,error } = this.state;
 
     const isInvalid = password === "" || email === "";
-
+    const { t } = this.props;
     return (
-      <>
-      <div className="wrapper">
+     
+  <>    
 	<nav className="navbar navbar-default">
     <div className="container-fluid">
       <div className="navbar-header">
@@ -118,9 +113,9 @@ class SignIn extends Component {
       <div id="navbar" className="navbar-collapse collapse"> 
       	<span className="nav-title">Language</span>       
         <ul className="nav navbar-nav navbar-right">
-          <li><a href="#">English</a></li>
-          <li><a href="#">Spanish</a></li>
-          <li><a href="#">French</a></li>
+          <li><a className={this.state.language=='en'?'active':""} href="#" onClick={this.handleSetLanguage('en')}>English</a></li>
+          <li><a className={this.state.language=='es'?'active':""} href="#" onClick={this.handleSetLanguage('es')}>Spanish</a></li>
+          <li><a className={this.state.language=='fr'?'active':""} href="#" onClick={this.handleSetLanguage('fr')}>French</a></li>
         </ul>
       </div>
     </div>
@@ -138,31 +133,51 @@ class SignIn extends Component {
   	</div>
   	<div className="row">
   		<div className="col-md-12">
-  			<form>
+  			<form onSubmit={this.onSubmit}>
   				<ul className="form-container">
 	  				<li>
-              <input type="text" name="" placeholder="User"/>
+              <input type="text" name="" placeholder={t('user')} value={email}
+              onChange={event =>
+                this.setState(updateByPropertyName("email", event.target.value))
+              } required/>
               </li>
 	  				<li>
-              <input type="password" name="" placeholder="Password"/>
+              <input type="password" name="" placeholder={t('password')}  value={password}
+              onChange={event =>
+                this.setState(
+                  updateByPropertyName("password", event.target.value)
+                )
+              } required/>
+              </li>
+              <li>
+              <input type="text" name="" placeholder={t('companyname')}  value={companyname}
+              onChange={event =>
+                this.setState(
+                  updateByPropertyName("companyname", event.target.value)
+                )
+              } required/>
               </li>
 	  				<li>
-              <button className="btn btn-default">Log In</button>
+              <button className="btn btn-default">{t('login')}</button>
               </li>
 	  			</ul>
   			</form>
   		</div>
   	</div>
   </div>
-
   <footer>
   	<p><a href="http://www.4gflota.com" target="_blank">www.4gflota.com</a></p>
   </footer>
 
-</div>
 </>
+
     );
   }
 }
 
-export default SignIn;
+
+SignIn.propTypes = {
+  t: PropTypes.func.isRequired,
+};
+
+export default translate(SignIn);
