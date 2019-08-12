@@ -2,5 +2,7 @@
     "user": "utilisateur",
     "password": "mot de passe",
     "companyname": "Nom de la compagnie",
-    "login": "s'identifier"
+    "login": "s'identifier",
+    "successmessage":"Utilisateur connecté avec succès",
+    "errormessage":"Erreur"
 }

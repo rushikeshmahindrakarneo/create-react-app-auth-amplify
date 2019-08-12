@@ -2,5 +2,7 @@
     "user": "usuario",
     "password": "contraseña",
     "companyname": "nombre de empresa",
-    "login": "iniciar sesión"
+    "login": "iniciar sesión",
+    "successmessage":"El usuario ha iniciado sesión correctamente",
+    "errormessage":"Error"
 }

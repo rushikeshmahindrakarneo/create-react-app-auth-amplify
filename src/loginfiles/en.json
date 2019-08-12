@@ -2,5 +2,7 @@
     "user": "USER",
     "password": "PASSWORD",
     "companyname": "COMPANY NAME",
-    "login": "LOG IN"
+    "login": "LOG IN",
+    "successmessage":"User Loggedin Successfully",
+    "errormessage":"Error"
 }

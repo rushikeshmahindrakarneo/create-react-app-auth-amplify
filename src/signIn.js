@@ -34,7 +34,17 @@ const INITIAL_STATE = {
   password: "",
   companyname:"",
   language:'en',
-  error: null
+  error: null,
+  submitted:false,
+  success:null
+};
+let errorstyle = {
+  textAlign:"center",
+  color:"Red"
+};
+let successstyle = {
+  textAlign:"center",
+  color:"green"
 };
 
 class SignIn extends Component {
@@ -53,12 +63,14 @@ class SignIn extends Component {
   }
 
   onSubmit = event => {
+    this.setState({submitted:true});
     const { email, password,companyname } = this.state;
 console.log(companyname);
     Auth.signIn(email, password)
       .then(user => {
         console.log(user);
-        
+        this.setState({success:"True"})
+        this.setState({error:null})
         //this.setState(() => ({ ...INITIAL_STATE }));
         if (
           user.challengeName === "SMS_MFA" ||
@@ -74,17 +86,23 @@ console.log(companyname);
          localStorage.clear();
 
         }
+        this.setState({submitted:false}); 
       })
       .catch(err => {
-        const { authError } = this.props;
-        if (err.code === "UserNotConfirmedException") {
-          this.changeState("confirmSignUp");
-        } else if (err.code === "PasswordResetRequiredException") {
-          this.changeState("requireNewPassword");
-        } else {
-          authError(err);
-        }
-        this.setState(updateByPropertyName("error", err));
+        // const { authError } = this.props;
+        // if (err.code === "UserNotConfirmedException") {
+        //   this.changeState("confirmSignUp");
+        // } else if (err.code === "PasswordResetRequiredException") {
+        //   this.changeState("requireNewPassword");
+        // } else {
+        //   authError(err);
+        // }
+
+        console.log(err);
+        this.setState({error:err.message})
+        this.setState({success:null})
+        this.setState({submitted:false}); 
+        //this.setState(updateByPropertyName("error", err));
       });
 
     event.preventDefault();
@@ -135,6 +153,21 @@ console.log(companyname);
   		<div className="col-md-12">
   			<form onSubmit={this.onSubmit}>
   				<ul className="form-container">
+            <li>
+              
+               <h3 style={errorstyle}>
+                 {
+                   (this.state.error)?t("errormessage")+" : "+this.state.error:""
+                 }
+               </h3>
+               <h3 style={successstyle}>
+                 {
+                   (this.state.success)?t("successmessage"):""
+                 }
+               </h3>          
+             
+              
+            </li>
 	  				<li>
               <input type="text" name="" placeholder={t('user')} value={email}
               onChange={event =>
@@ -158,7 +191,7 @@ console.log(companyname);
               } required/>
               </li>
 	  				<li>
-              <button className="btn btn-default">{t('login')}</button>
+              <button className="btn btn-default" disabled={this.state.submitted}>{t('login')}</button>
               </li>
 	  			</ul>
   			</form>
