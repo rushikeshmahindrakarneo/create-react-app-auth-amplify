@@ -68,9 +68,7 @@ class SignIn extends Component {
 console.log(companyname);
     Auth.signIn(email, password)
       .then(user => {
-        console.log(user);
-        this.setState({success:"True"})
-        this.setState({error:null})
+       
         //this.setState(() => ({ ...INITIAL_STATE }));
         if (
           user.challengeName === "SMS_MFA" ||
@@ -82,11 +80,12 @@ console.log(companyname);
         } else if (user.challengeName === "MFA_SETUP") {
           this.changeState("TOTPSetup", user);
         } else {
-         console.log(user);
+         //console.log(user);
          localStorage.clear();
+         this.LoginFromLambda();
 
         }
-        this.setState({submitted:false}); 
+        
       })
       .catch(err => {
         // const { authError } = this.props;
@@ -107,6 +106,43 @@ console.log(companyname);
 
     event.preventDefault();
   };
+
+  LoginFromLambda=()=>{
+    const { email, password,companyname } = this.state;
+    fetch('https://8qazrlix7j.execute-api.us-west-2.amazonaws.com/Stage/user/login', {
+			method: 'POST',
+			body: JSON.stringify({
+        "emailId": email,
+        "password": password,
+        "companyName": companyname
+      }),
+			headers: {
+				"Content-type": "application/json; charset=UTF-8"
+			}
+		}).then(response => {
+				return response.json()
+			}).then(json => {
+      console.log(json);
+      if(json.success)
+      {
+        this.setState({success:"True"})
+        this.setState({error:null})
+        this.setState({submitted:false});
+        localStorage.setItem("accessToken",json.accessToken);
+        localStorage.setItem("idToken",json.idToken);
+        localStorage.setItem("refreshToken",json.refreshToken);
+        window.location.href = 'http://www.google.com'; 
+      }
+      else
+      {
+        this.setState({success:null})
+        this.setState({error:json.message})
+        this.setState({submitted:false});
+      }
+      //console.log(user);
+      
+			});
+  }
 
   render() {
 
