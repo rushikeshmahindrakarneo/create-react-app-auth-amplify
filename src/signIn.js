@@ -20,10 +20,7 @@ import {
 } from 'react-switch-lang';
 import { GoogleLogin } from 'react-google-login';
  
- 
-const responseGoogle = (response) => {
-  console.log(response);
-}
+
  
 
 
@@ -60,6 +57,11 @@ class SignIn extends Component {
     super(props);
 
     this.state = { ...INITIAL_STATE };
+  }
+
+   
+  responseGoogle = (response) => {
+    console.log(response.profileObj.email);
   }
   handleSetLanguage = (key) => () => {
     this.setState({language:key})
