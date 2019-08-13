@@ -18,6 +18,14 @@ import {
   setLanguage,
   translate,
 } from 'react-switch-lang';
+import { GoogleLogin } from 'react-google-login';
+ 
+ 
+const responseGoogle = (response) => {
+  console.log(response);
+}
+ 
+
 
 
 setTranslations({ en, fr,es });
@@ -62,7 +70,18 @@ class SignIn extends Component {
     changeAuthState(type, event);
   }
 
-  onSubmit = event => {
+  onSubmit2=event=>{
+    const ga = window.gapi.auth2.getAuthInstance();
+    ga.signIn().then(
+        googleUser => {
+            this.getAWSCredentials(googleUser);
+        },
+        error => {
+            console.log(error);
+        }
+    );
+  }
+  onSubmit= event => {
     this.setState({submitted:true});
     const { email, password,companyname } = this.state;
 console.log(companyname);
@@ -172,6 +191,14 @@ console.log(companyname);
           <li><a className={this.state.language=='fr'?'active':""} href="#" onClick={this.handleSetLanguage('fr')}>French</a></li>
         </ul>
       </div>
+    
+  <GoogleLogin
+    clientId="631943279785-4n6pj6tkh49a823m2supeqothea8ibjh.apps.googleusercontent.com"
+    buttonText="Login"
+    onSuccess={responseGoogle}
+    onFailure={responseGoogle}
+    cookiePolicy={'single_host_origin'}
+  />
     </div>
   </nav>
 
@@ -228,6 +255,7 @@ console.log(companyname);
               </li>
 	  				<li>
               <button className="btn btn-default" disabled={this.state.submitted}>{t('login')}</button>
+              <button type ="button" className="btn btn-default" onClick={this.onSubmit2}>{t('login')}</button>
               </li>
 	  			</ul>
   			</form>
