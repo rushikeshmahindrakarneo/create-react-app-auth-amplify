@@ -51,6 +51,12 @@ let successstyle = {
   textAlign:"center",
   color:"green"
 };
+let googlebutton={
+  backgroundColor: "white",
+  padding: "4px",
+  border: "1px solid",
+  borderRadius: "12px"
+};
 
 class SignIn extends Component {
   constructor(props) {
@@ -60,8 +66,15 @@ class SignIn extends Component {
   }
 
    
-  responseGoogle = (response) => {
-    console.log(response.profileObj.email);
+  responseGoogle = (response) => { 
+    if(response.error)
+    {
+      this.setState({error:response.error})
+    }
+    else
+    {
+      this.setState({email:response.profileObj.email})
+    }
   }
   handleSetLanguage = (key) => () => {
     this.setState({language:key})
@@ -191,16 +204,21 @@ console.log(companyname);
           <li><a className={this.state.language=='en'?'active':""} href="#" onClick={this.handleSetLanguage('en')}>English</a></li>
           <li><a className={this.state.language=='es'?'active':""} href="#" onClick={this.handleSetLanguage('es')}>Spanish</a></li>
           <li><a className={this.state.language=='fr'?'active':""} href="#" onClick={this.handleSetLanguage('fr')}>French</a></li>
+         
         </ul>
-      </div>
-    
-  <GoogleLogin
-    clientId="631943279785-4n6pj6tkh49a823m2supeqothea8ibjh.apps.googleusercontent.com"
+        <GoogleLogin
+     clientId="631943279785-4n6pj6tkh49a823m2supeqothea8ibjh.apps.googleusercontent.com"
+    render={renderProps => (
+      <a href="#" onClick={renderProps.onClick} style={googlebutton} disabled={renderProps.disabled}>Login With Google</a>
+    )}
     buttonText="Login"
-    onSuccess={responseGoogle}
-    onFailure={responseGoogle}
+    onSuccess={this.responseGoogle}
+    onFailure={this.responseGoogle}
     cookiePolicy={'single_host_origin'}
   />
+      </div>
+    
+  
     </div>
   </nav>
 
