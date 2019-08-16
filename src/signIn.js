@@ -21,7 +21,7 @@ import {
 import { GoogleLogin } from 'react-google-login';
  
 
- 
+import configurationData from './configurationData';
 
 
 
@@ -29,6 +29,7 @@ setTranslations({ en, fr,es });
 setDefaultLanguage('en');
 setLanguageCookie();
 
+console.log(configurationData.loginUrl);
 
 const updateByPropertyName = (propertyName, value) => () => ({
   [propertyName]: value
@@ -85,17 +86,7 @@ class SignIn extends Component {
     changeAuthState(type, event);
   }
 
-  onSubmit2=event=>{
-    const ga = window.gapi.auth2.getAuthInstance();
-    ga.signIn().then(
-        googleUser => {
-            this.getAWSCredentials(googleUser);
-        },
-        error => {
-            console.log(error);
-        }
-    );
-  }
+  
   onSubmit= event => {
     this.setState({submitted:true});
     const { email, password,companyname } = this.state;
@@ -143,7 +134,7 @@ console.log(companyname);
 
   LoginFromLambda=()=>{
     const { email, password,companyname } = this.state;
-    fetch('https://8qazrlix7j.execute-api.us-west-2.amazonaws.com/Stage/user/login', {
+    fetch(configurationData.loginUrl, {
 			method: 'POST',
 			body: JSON.stringify({
         "emailId": email,
@@ -156,16 +147,17 @@ console.log(companyname);
 		}).then(response => {
 				return response.json()
 			}).then(json => {
+
       console.log(json);
       if(json.success)
       {
         this.setState({success:"True"})
         this.setState({error:null})
         this.setState({submitted:false});
-        localStorage.setItem("accessToken",json.accessToken);
-        localStorage.setItem("idToken",json.idToken);
-        localStorage.setItem("refreshToken",json.refreshToken);
-        window.location.href = 'http://www.google.com'; 
+        
+     window.location.href = configurationData.redirectUrl+'?token='+json.tokenId; 
+     
+
       }
       else
       {
@@ -201,13 +193,13 @@ console.log(companyname);
       <div id="navbar" className="navbar-collapse collapse"> 
       	<span className="nav-title">Language</span>       
         <ul className="nav navbar-nav navbar-right">
-          <li><a className={this.state.language=='en'?'active':""} href="#" onClick={this.handleSetLanguage('en')}>English</a></li>
-          <li><a className={this.state.language=='es'?'active':""} href="#" onClick={this.handleSetLanguage('es')}>Spanish</a></li>
-          <li><a className={this.state.language=='fr'?'active':""} href="#" onClick={this.handleSetLanguage('fr')}>French</a></li>
+          <li><a className={this.state.language==='en'?'active':""} href="#" onClick={this.handleSetLanguage('en')}>English</a></li>
+          <li><a className={this.state.language==='es'?'active':""} href="#" onClick={this.handleSetLanguage('es')}>Spanish</a></li>
+          <li><a className={this.state.language==='fr'?'active':""} href="#" onClick={this.handleSetLanguage('fr')}>French</a></li>
          
         </ul>
         <GoogleLogin
-     clientId="631943279785-4n6pj6tkh49a823m2supeqothea8ibjh.apps.googleusercontent.com"
+     clientId={configurationData.googleClientId}
     render={renderProps => (
       <a href="#" onClick={renderProps.onClick} style={googlebutton} disabled={renderProps.disabled}>Login With Google</a>
     )}
@@ -275,7 +267,7 @@ console.log(companyname);
               </li>
 	  				<li>
               <button className="btn btn-default" disabled={this.state.submitted}>{t('login')}</button>
-              <button type ="button" className="btn btn-default" onClick={this.onSubmit2}>{t('login')}</button>
+              
               </li>
 	  			</ul>
   			</form>
