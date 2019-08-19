@@ -89,6 +89,8 @@ signInNew() {
 
 async getAWSCredentials(googleUser) {
   const { id_token, expires_at } = googleUser.getAuthResponse();
+  console.log(id_token);
+  console.log(expires_at);
   const profile = googleUser.getBasicProfile();
   let user = {
       email: profile.getEmail(),
@@ -100,7 +102,8 @@ async getAWSCredentials(googleUser) {
       { token: id_token, expires_at },
       user
   );
-  console.log('credentials', credentials);
+  console.log( credentials);
+  localStorage.clear();
 }
 
 createScript() {
@@ -119,7 +122,7 @@ initGapi() {
       g.auth2.init({
           client_id: configurationData.googleClientId,
           // authorized scopes
-          scope: 'profile email openid'
+          scope: 'email'
       });
   });
 }
