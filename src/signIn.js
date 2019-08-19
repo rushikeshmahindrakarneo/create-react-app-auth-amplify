@@ -8,7 +8,7 @@ import './loginfiles/responsive.css'
 import en from './loginfiles/en.json';
 import fr from './loginfiles/fr.json';
 import es from './loginfiles/es.json';
-import PropTypes from 'prop-types';
+import PropTypes, { string } from 'prop-types';
  
 // Translation Higher Order Component
 import {
@@ -42,7 +42,8 @@ const INITIAL_STATE = {
   language:'en',
   error: null,
   submitted:false,
-  success:null
+  success:null,
+  googletoken:null
 };
 let errorstyle = {
   textAlign:"center",
@@ -75,6 +76,7 @@ class SignIn extends Component {
 
 
 signInNew() {
+  this.setState({submitted:false})
   const ga = window.gapi.auth2.getAuthInstance();
   ga.signIn().then(
       googleUser => {
@@ -88,8 +90,8 @@ signInNew() {
 
 
 async getAWSCredentials(googleUser) {
-  const { id_token, expires_at,refresh_token } = googleUser.getAuthResponse();
-console.log(refresh_token);
+  this.setState({submitted:true})
+  const { id_token, expires_at } = googleUser.getAuthResponse();
   console.log(id_token);
   console.log(expires_at);
   const profile = googleUser.getBasicProfile();
@@ -104,7 +106,26 @@ console.log(refresh_token);
       user
   );
   console.log( credentials);
+  this.setState(
+    updateByPropertyName("email", user.email)
+  )
+
+  this.setState(
+    updateByPropertyName("googletoken",id_token)
+  )
+
   localStorage.clear();
+  if(this.state.companyname===null || this.state.companyname==="")
+  {
+    this.setState({error:"Please enter company name"})
+   
+  }
+  else
+  {
+   
+    this.LoginFromLambda();
+  }
+  
 }
 
 createScript() {
@@ -195,7 +216,18 @@ console.log(companyname);
   };
 
   LoginFromLambda=()=>{
+    
     const { email, password,companyname } = this.state;
+    let	headers= {
+      "Content-type": "application/json; charset=UTF-8"
+      
+    }
+    if(this.state.googletoken!==null && this.state.googletoken!=="")
+    {
+      headers.googletoken=this.state.googletoken;
+    }
+
+    console.log('lambda');
     fetch(configurationData.loginUrl, {
 			method: 'POST',
 			body: JSON.stringify({
@@ -203,9 +235,7 @@ console.log(companyname);
         "password": password,
         "companyName": companyname
       }),
-			headers: {
-				"Content-type": "application/json; charset=UTF-8"
-			}
+		  headers,
 		}).then(response => {
 				return response.json()
 			}).then(json => {
@@ -260,17 +290,13 @@ console.log(companyname);
           <li><a className={this.state.language==='fr'?'active':""} href="#" onClick={this.handleSetLanguage('fr')}>French</a></li>
          
         </ul>
-        <button onClick={this.signInNew}>Login</button>
-        <GoogleLogin
-     clientId={configurationData.googleClientId}
-    render={renderProps => (
-      <a href="#" onClick={renderProps.onClick} style={googlebutton} disabled={renderProps.disabled}>Login With Google</a>
-    )}
-    buttonText="Login"
-    onSuccess={this.responseGoogle}
-    onFailure={this.responseGoogle}
-    cookiePolicy={'single_host_origin'}
-  />
+        {
+          
+          (this.state.companyname!=="" && !this.state.submitted)?<button style={googlebutton} onClick={this.signInNew}>Login With Google</button>:""
+         
+        }
+        
+      
       </div>
     
   
