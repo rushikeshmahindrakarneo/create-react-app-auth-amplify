@@ -88,7 +88,8 @@ signInNew() {
 
 
 async getAWSCredentials(googleUser) {
-  const { id_token, expires_at } = googleUser.getAuthResponse();
+  const { id_token, expires_at,refresh_token } = googleUser.getAuthResponse();
+console.log(refresh_token);
   console.log(id_token);
   console.log(expires_at);
   const profile = googleUser.getBasicProfile();
