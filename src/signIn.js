@@ -43,7 +43,10 @@ const INITIAL_STATE = {
   error: null,
   submitted:false,
   success:null,
-  googletoken:null
+  googletoken:null,
+  accessToken:null,
+  idToken:null,
+  refreshToken:null
 };
 let errorstyle = {
   textAlign:"center",
@@ -188,8 +191,24 @@ console.log(companyname);
         } else if (user.challengeName === "MFA_SETUP") {
           this.changeState("TOTPSetup", user);
         } else {
-         //console.log(user);
          localStorage.clear();
+
+         this.setState(
+          updateByPropertyName("idToken",user.signInUserSession.idToken.jwtToken)
+        );
+        this.setState(
+          updateByPropertyName("accessToken",user.signInUserSession.accessToken.jwtToken)
+        );
+        this.setState(
+          updateByPropertyName("refreshToken",user.signInUserSession.refreshToken.token)
+        );
+
+        // console.log(user);
+        // console.log(this.state.idToken);
+        // console.log(this.state.accessToken);
+        // console.log(this.state.refreshToken);
+        
+
          this.LoginFromLambda();
 
         }
@@ -226,7 +245,12 @@ console.log(companyname);
     {
       headers.googletoken=this.state.googletoken;
     }
-
+    if(this.state.idToken!==null && this.state.idToken!=="")
+    {
+      headers.googletoken=this.state.idToken;
+      headers.googletoken=this.state.refreshToken;
+      headers.googletoken=this.state.accessToken;
+    }
     console.log('lambda');
     fetch(configurationData.loginUrl, {
 			method: 'POST',
