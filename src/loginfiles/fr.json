@@ -4,5 +4,9 @@
     "companyname": "Nom de la compagnie",
     "login": "s'identifier",
     "successmessage":"Utilisateur connecté avec succès",
-    "errormessage":"Erreur"
+    "errormessage":"Erreur",
+    "successmessagesignup":"Utilisateur enregistré avec succès! Suivez l'email pour d'autres étapes",
+    "signup":"S'INSCRIRE",
+    "RequestPassword":"Demander un code de vérification",
+    "RequestPasswordSuccess":"Veuillez entrer le nouveau mot de passe et le code reçu à l'adresse rishicrew@gmail.com."
 }

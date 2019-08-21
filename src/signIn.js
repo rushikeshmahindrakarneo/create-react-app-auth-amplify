@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 import { Auth } from "aws-amplify";
-
-
 import './loginfiles/bootstrap.min.css'
 import './loginfiles/style.css'
 import './loginfiles/responsive.css'
@@ -9,8 +7,6 @@ import en from './loginfiles/en.json';
 import fr from './loginfiles/fr.json';
 import es from './loginfiles/es.json';
 import PropTypes, { string } from 'prop-types';
- 
-// Translation Higher Order Component
 import {
   setTranslations,
   setDefaultLanguage,
@@ -18,18 +14,14 @@ import {
   setLanguage,
   translate,
 } from 'react-switch-lang';
-import { GoogleLogin } from 'react-google-login';
- 
-
 import configurationData from './configurationData';
-
-
 
 setTranslations({ en, fr,es });
 setDefaultLanguage('en');
-setLanguageCookie();
+setLanguage('es');
+//setLanguageCookie();
 
-console.log(configurationData.loginUrl);
+
 
 const updateByPropertyName = (propertyName, value) => () => ({
   [propertyName]: value
@@ -63,18 +55,27 @@ let googlebutton={
   borderRadius: "12px"
 };
 
+let bottomLinksStyle={
+  marginTop: "5px",
+  fontSize: "14px",
+  padding: "0",
+  border: "none"
+};
 class SignIn extends Component {
   constructor(props) {
     super(props);
     this.signInNew = this.signInNew.bind(this);
     this.state = { ...INITIAL_STATE };
+    
   }
 
   componentDidMount() {
+    this.handleSetLanguage(this.state.language);
     const ga = window.gapi && window.gapi.auth2 ? 
         window.gapi.auth2.getAuthInstance() : 
         null;
     if (!ga) this.createScript();
+    
 }
 
 
@@ -119,15 +120,9 @@ async getAWSCredentials(googleUser) {
 
   localStorage.clear();
   if(this.state.companyname===null || this.state.companyname==="")
-  {
     this.setState({error:"Please enter company name"})
-   
-  }
-  else
-  {
-   
+  else   
     this.LoginFromLambda();
-  }
   
 }
 
@@ -152,21 +147,15 @@ initGapi() {
   });
 }
    
-  responseGoogle = (response) => { 
-    console.log(response);
-    if(response.error)
-    {
-      this.setState({error:response.error})
-    }
-    else
-    {
-      this.setState({email:response.profileObj.email})
-    }
-  }
+  
   handleSetLanguage = (key) => () => {
+    console.log(key);
     this.setState({language:key})
     setLanguage(key);
+    localStorage.setItem('currentlanguage',key);
   };
+
+
   changeState(type, event) {
     const { changeAuthState } = this.props;
     changeAuthState(type, event);
@@ -176,7 +165,7 @@ initGapi() {
   onSubmit= event => {
     this.setState({submitted:true});
     const { email, password,companyname } = this.state;
-console.log(companyname);
+
     Auth.signIn(email, password)
       .then(user => {
        
@@ -201,34 +190,14 @@ console.log(companyname);
         );
         this.setState(
           updateByPropertyName("refreshToken",user.signInUserSession.refreshToken.token)
-        );
-
-        // console.log(user);
-        // console.log(this.state.idToken);
-        // console.log(this.state.accessToken);
-        // console.log(this.state.refreshToken);
-        
-
-         this.LoginFromLambda();
-
-        }
-        
+        );      
+        this.LoginFromLambda();
+        }        
       })
       .catch(err => {
-        // const { authError } = this.props;
-        // if (err.code === "UserNotConfirmedException") {
-        //   this.changeState("confirmSignUp");
-        // } else if (err.code === "PasswordResetRequiredException") {
-        //   this.changeState("requireNewPassword");
-        // } else {
-        //   authError(err);
-        // }
-
-        console.log(err);
         this.setState({error:err.message})
         this.setState({success:null})
         this.setState({submitted:false}); 
-        //this.setState(updateByPropertyName("error", err));
       });
 
     event.preventDefault();
@@ -262,33 +231,26 @@ console.log(companyname);
 		  headers,
 		}).then(response => {
 				return response.json()
-			}).then(json => {
-
-      console.log(json);
-      if(json.success)
-      {
-        this.setState({success:"True"})
-        this.setState({error:null})
-        this.setState({submitted:false});
-        
-     window.location.href = configurationData.redirectUrl+'?token='+json.tokenId; 
-     
-
-      }
-      else
-      {
-        this.setState({success:null})
-        this.setState({error:json.message})
-        this.setState({submitted:false});
-      }
-      //console.log(user);
-      
+			}).then(json => {        
+        if(json.success)
+        {
+          this.setState({success:"True"})
+          this.setState({error:null})
+          this.setState({submitted:false});
+          window.location.href = configurationData.redirectUrl+'?token='+json.tokenId;
+        }
+        else
+        {
+          this.setState({success:null})
+          this.setState({error:json.message})
+          this.setState({submitted:false});
+        }      
 			});
   }
 
   render() {
 
-
+    
     const { email, password, companyname,error } = this.state;
 
     const isInvalid = password === "" || email === "";
@@ -380,6 +342,12 @@ console.log(companyname);
               </li>
 	  				<li>
               <button className="btn btn-default" disabled={this.state.submitted}>{t('login')}</button>
+             <div className="col-sm-12">
+               <div className="col-sm-6"><button style={bottomLinksStyle} onClick={() => this.changeState("signUp")}>Register New User</button></div>
+               <div className="col-sm-6"><button style={bottomLinksStyle} onClick={() => this.changeState("forgotPassword")}>Forgot Password</button></div>
+             </div>
+             
+              
               
               </li>
 	  			</ul>

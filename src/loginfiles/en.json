@@ -4,5 +4,9 @@
     "companyname": "COMPANY NAME",
     "login": "LOG IN",
     "successmessage":"User Loggedin Successfully",
-    "errormessage":"Error"
+    "errormessage":"Error",
+    "successmessagesignup":"User Registered Successfully! Follow email for further steps",
+    "signup":"SIGN UP",
+    "RequestPassword":"Request Verification Code",
+    "RequestPasswordSuccess":"Please enter new password and code received on rishicrew@gmail.com"
 }
