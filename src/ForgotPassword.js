@@ -42,7 +42,8 @@ const INITIAL_STATE = {
   idToken:null,
   refreshToken:null,
   verificationcode:"",
-  success2:null
+  success2:null,
+  confirmpassword:""
 };
 let errorstyle = {
   textAlign:"center",
@@ -110,38 +111,54 @@ ForgotPasswordNew() {
     this.setState({submitted:true}); 
     this.setState({error:null});
     this.setState({success:null});
-    const { email, password,verificationcode } = this.state;
+    const { email, password,verificationcode,confirmpassword } = this.state;
     if(this.state.isCodeSent)
     {
-     Auth.forgotPasswordSubmit(email, verificationcode, password)
-      .then(data => {
-        this.setState({success2:true});        
-      })
-      .catch(err => {
-        this.setState({success:null});
-        this.setState({submitted:false}); 
-        this.setState({success:err});
-      });
+      if(password !== confirmpassword) {
+        this.setState({error:"Passwords Do Not Match"});
+        this.setState({success:null})
+          this.setState({submitted:false}); 
+          event.preventDefault();
+      }
+      else{
+        Auth.forgotPasswordSubmit(email, verificationcode, password)
+        .then(data => {
+          this.setState({success2:true}); 
+          let vm=this;
+          setTimeout(function(){
+            vm.changeState("signIn");
+          },3000)       
+        })
+        .catch(err => {
+          this.setState({success:null});
+          this.setState({submitted:false}); 
+          this.setState({success:err});
+        });
+      }
+     
     }
     else
     {
-        
-        
+      
         Auth.forgotPassword(
-            email
-            )
-          .then(user => {
-            this.setState({success:true})
-            this.setState({submitted:false}); 
-            this.setState({error:null});
-            this.setState({isCodeSent:true});
-            
-          })
-          .catch(err => {
-            this.setState({error:err.message})
-            this.setState({success:null})
-            this.setState({submitted:false}); 
-          });
+          email
+          )
+        .then(user => {
+          this.setState({success:true})
+          this.setState({submitted:false}); 
+          this.setState({error:null});
+          this.setState({isCodeSent:true});
+          
+        })
+        .catch(err => {
+          this.setState({error:err.message})
+          this.setState({success:null})
+          this.setState({submitted:false}); 
+        });
+      
+      
+        
+      event.preventDefault();
     
     }
 
@@ -151,10 +168,11 @@ ForgotPasswordNew() {
   
   
 
+
   render() {
 
 
-    const { email, password, companyname,error,verificationcode } = this.state;
+    const { email, password,confirmpassword, companyname,error,verificationcode } = this.state;
 
     const isInvalid = password === "" || email === "";
     const { t } = this.props;
@@ -234,9 +252,15 @@ ForgotPasswordNew() {
                   } required/>
                   </li>
                   <li>
-                  <input type="text" name="" placeholder={t('newpassword')} value={password}
+                  <input type="text" name="" id="password" placeholder={t('NewPassword')} value={password}
                   onChange={event =>
                     this.setState(updateByPropertyName("password", event.target.value))
+                  } required/>
+                  </li>
+                  <li>
+                  <input type="text" id="confirm_password" name="" placeholder={t('ConfirmPassword')} value={confirmpassword}
+                  onChange={event =>
+                    this.setState(updateByPropertyName("confirmpassword", event.target.value))
                   } required/>
                   </li>
                   </>

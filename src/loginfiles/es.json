@@ -1,5 +1,5 @@
 {
-    "user": "usuario",
+    "user": "Email",
     "password": "contraseña",
     "companyname": "nombre de empresa",
     "login": "iniciar sesión",
@@ -13,5 +13,8 @@
     "ForgotPasswordLabel":"Se te olvidó tu contraseña",
     "LoginLabel":"¿Usuario existente? Iniciar sesión",
     "SubmitNewPassword":"Confirmar cambios",
-    "PasswordChangeSuccess":"¡Contraseña cambiada con éxito!"
+    "PasswordChangeSuccess":"¡Contraseña cambiada con éxito!",
+    "verificationcode":"Código de verificación",
+    "NewPassword":"Nueva contraseña",
+    "ConfirmPassword":"Confirmar contraseña"
 }

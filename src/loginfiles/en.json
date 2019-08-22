@@ -1,5 +1,5 @@
 {
-    "user": "USER",
+    "user": "Email",
     "password": "PASSWORD",
     "companyname": "COMPANY NAME",
     "login": "LOG IN",
@@ -13,5 +13,8 @@
     "ForgotPasswordLabel":"Forgot Password",
     "LoginLabel":"Existing User? Login",
     "SubmitNewPassword":"Confirm Changes",
-    "PasswordChangeSuccess":"Password Changed Successfully!"
+    "PasswordChangeSuccess":"Password Changed Successfully!",
+    "verificationcode":"Verification Code",
+    "NewPassword":"New Password",
+    "ConfirmPassword":"Confirm Password"
 }
