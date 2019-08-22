@@ -8,5 +8,10 @@
     "successmessagesignup":"User Registered Successfully! Follow email for further steps",
     "signup":"SIGN UP",
     "RequestPassword":"Request Verification Code",
-    "RequestPasswordSuccess":"Please enter new password and code received on rishicrew@gmail.com"
+    "RequestPasswordSuccess":"Please enter new password and code received on ####emailhere####",
+    "NewUserLabel":"Register",
+    "ForgotPasswordLabel":"Forgot Password",
+    "LoginLabel":"Existing User? Login",
+    "SubmitNewPassword":"Confirm Changes",
+    "PasswordChangeSuccess":"Password Changed Successfully!"
 }

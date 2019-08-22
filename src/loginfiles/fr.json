@@ -8,5 +8,10 @@
     "successmessagesignup":"Utilisateur enregistré avec succès! Suivez l'email pour d'autres étapes",
     "signup":"S'INSCRIRE",
     "RequestPassword":"Demander un code de vérification",
-    "RequestPasswordSuccess":"Veuillez entrer le nouveau mot de passe et le code reçu à l'adresse rishicrew@gmail.com."
+    "RequestPasswordSuccess":"Veuillez entrer le nouveau mot de passe et le code reçu à l'adresse ####emailhere####.",
+    "NewUserLabel":"registre",
+    "ForgotPasswordLabel":"Mot de passe oublié",
+    "LoginLabel":"Utilisateur existant? S'identifier",
+    "SubmitNewPassword":"Confirmer les modifications",
+    "PasswordChangeSuccess":"Le mot de passe a été changé avec succès!"
 }

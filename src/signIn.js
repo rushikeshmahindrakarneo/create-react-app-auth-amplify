@@ -343,8 +343,8 @@ initGapi() {
 	  				<li>
               <button className="btn btn-default" disabled={this.state.submitted}>{t('login')}</button>
              <div className="col-sm-12">
-               <div className="col-sm-6"><button style={bottomLinksStyle} onClick={() => this.changeState("signUp")}>Register New User</button></div>
-               <div className="col-sm-6"><button style={bottomLinksStyle} onClick={() => this.changeState("forgotPassword")}>Forgot Password</button></div>
+               <div className="col-sm-6"><button style={bottomLinksStyle} onClick={() => this.changeState("signUp")}>{t('NewUserLabel')}</button></div>
+               <div className="col-sm-6"><button style={bottomLinksStyle} onClick={() => this.changeState("forgotPassword")}>{t('ForgotPasswordLabel')}</button></div>
              </div>
              
               

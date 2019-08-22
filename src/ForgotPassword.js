@@ -41,7 +41,8 @@ const INITIAL_STATE = {
   accessToken:null,
   idToken:null,
   refreshToken:null,
-  verificationcode:""
+  verificationcode:"",
+  success2:null
 };
 let errorstyle = {
   textAlign:"center",
@@ -106,14 +107,26 @@ ForgotPasswordNew() {
 
   
   onSubmit= event => {
+    this.setState({submitted:true}); 
+    this.setState({error:null});
+    this.setState({success:null});
+    const { email, password,verificationcode } = this.state;
     if(this.state.isCodeSent)
     {
-
+     Auth.forgotPasswordSubmit(email, verificationcode, password)
+      .then(data => {
+        this.setState({success2:true});        
+      })
+      .catch(err => {
+        this.setState({success:null});
+        this.setState({submitted:false}); 
+        this.setState({success:err});
+      });
     }
     else
     {
-        this.setState({submitted:true});
-        const { email, password } = this.state;
+        
+        
         Auth.forgotPassword(
             email
             )
@@ -130,11 +143,12 @@ ForgotPasswordNew() {
             this.setState({submitted:false}); 
           });
     
-        event.preventDefault();
     }
-  
+
+    event.preventDefault();
   };
 
+  
   
 
   render() {
@@ -192,7 +206,12 @@ ForgotPasswordNew() {
                </h3>
                <h3 style={successstyle}>
                  {
-                   (this.state.success)?t("RequestPasswordSuccess"):""
+                   (this.state.success)?t("RequestPasswordSuccess").replace("####emailhere####",this.state.email):""
+                 }
+               </h3>   
+               <h3 style={successstyle}>
+                 {
+                   (this.state.success2)?t("PasswordChangeSuccess"):""
                  }
                </h3>          
              
@@ -226,10 +245,15 @@ ForgotPasswordNew() {
 	  				
               <li>
               
-              <button className="btn btn-default" disabled={this.state.submitted}>{t('RequestPassword')}</button>
+              <button className="btn btn-default" disabled={this.state.submitted}>{
+                
+                (this.state.isCodeSent)?t('SubmitNewPassword'):t('RequestPassword')
+                
+                
+                }</button>
              <div className="col-sm-12">
-               <div className="col-sm-6"><button type="button" style={bottomLinksStyle} onClick={() => this.changeState("signIn")}>Existing User? Login</button></div>
-               <div className="col-sm-6"><button type="button" style={bottomLinksStyle} onClick={() => this.changeState("signUp")}>Register User</button></div>
+               <div className="col-sm-6"><button type="button" style={bottomLinksStyle} onClick={() => this.changeState("signIn")}>{t('LoginLabel')}</button></div>
+               <div className="col-sm-6"><button type="button" style={bottomLinksStyle} onClick={() => this.changeState("signUp")}>{t('NewUserLabel')}</button></div>
              </div>
              
               

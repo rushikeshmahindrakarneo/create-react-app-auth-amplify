@@ -222,8 +222,8 @@ let attributes=
               <li>
               <button className="btn btn-default" disabled={this.state.submitted}>{t('signup')}</button>
              <div className="col-sm-12">
-               <div className="col-sm-6"><button type="button" style={bottomLinksStyle} onClick={() => this.changeState("signIn")}>Existing User? Login</button></div>
-               <div className="col-sm-6"><button type="button" style={bottomLinksStyle} onClick={() => this.changeState("forgotPassword")}>Forgot Password</button></div>
+               <div className="col-sm-6"><button type="button" style={bottomLinksStyle} onClick={() => this.changeState("signIn")}>{t('LoginLabel')}</button></div>
+               <div className="col-sm-6"><button type="button" style={bottomLinksStyle} onClick={() => this.changeState("forgotPassword")}>{t('ForgotPasswordLabel')}</button></div>
              </div>
              
               
