@@ -16,5 +16,6 @@
     "PasswordChangeSuccess":"¡Contraseña cambiada con éxito!",
     "verificationcode":"Código de verificación",
     "NewPassword":"Nueva contraseña",
-    "ConfirmPassword":"Confirmar contraseña"
+    "ConfirmPassword":"Confirmar contraseña",
+    "PasswordDoNotMatch":"Las contraseñas no coinciden"
 }

@@ -105,6 +105,8 @@ ForgotPasswordNew() {
 
   
   onSubmit= event => {
+    event.preventDefault();
+    
     this.setState({submitted:true}); 
     this.setState({error:null});
     this.setState({success:null});
@@ -112,7 +114,8 @@ ForgotPasswordNew() {
     if(this.state.isCodeSent)
     {
       if(password !== confirmpassword) {
-        this.setState({error:"Passwords Do Not Match"});
+        let passworderror=this.props.t('PasswordDoNotMatch');
+        this.setState({error:passworderror});
         this.setState({success:null})
           this.setState({submitted:false}); 
           event.preventDefault();
@@ -120,6 +123,7 @@ ForgotPasswordNew() {
       else{
         Auth.forgotPasswordSubmit(email, verificationcode, password)
         .then(data => {
+          console.log(data);
           this.setState({success2:true}); 
           let vm=this;
           setTimeout(function(){
@@ -127,9 +131,10 @@ ForgotPasswordNew() {
           },3000)       
         })
         .catch(err => {
+          console.log(err);
           this.setState({success:null});
           this.setState({submitted:false}); 
-          this.setState({success:err});
+          this.setState({error:err.message});
         });
       }
      
@@ -249,13 +254,13 @@ ForgotPasswordNew() {
                   } required/>
                   </li>
                   <li>
-                  <input type="text" name="" id="password" placeholder={t('NewPassword')} value={password}
+                  <input type="password" name="" id="password" placeholder={t('NewPassword')} value={password}
                   onChange={event =>
                     this.setState(updateByPropertyName("password", event.target.value))
                   } required/>
                   </li>
                   <li>
-                  <input type="text" id="confirm_password" name="" placeholder={t('ConfirmPassword')} value={confirmpassword}
+                  <input type="password" id="confirm_password" name="" placeholder={t('ConfirmPassword')} value={confirmpassword}
                   onChange={event =>
                     this.setState(updateByPropertyName("confirmpassword", event.target.value))
                   } required/>

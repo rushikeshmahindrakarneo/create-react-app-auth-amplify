@@ -1,8 +1,8 @@
 {
     "user": "Email",
-    "password": "PASSWORD",
-    "companyname": "COMPANY NAME",
-    "login": "LOG IN",
+    "password": "Password",
+    "companyname": "Company Name",
+    "login": "Log In",
     "successmessage":"User Loggedin Successfully",
     "errormessage":"Error",
     "successmessagesignup":"User Registered Successfully! Follow email for further steps",
@@ -16,5 +16,6 @@
     "PasswordChangeSuccess":"Password Changed Successfully!",
     "verificationcode":"Verification Code",
     "NewPassword":"New Password",
-    "ConfirmPassword":"Confirm Password"
+    "ConfirmPassword":"Confirm Password",
+    "PasswordDoNotMatch":"Passwords do not match"
 }
