@@ -21,9 +21,6 @@ import configurationData from './configurationData';
 setTranslations({ en, fr,es });
 setDefaultLanguage('en');
 setLanguageCookie();
-
-
-
 const updateByPropertyName = (propertyName, value) => () => ({
   [propertyName]: value
 });
