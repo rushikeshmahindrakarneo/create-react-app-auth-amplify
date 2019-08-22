@@ -217,6 +217,8 @@ ForgotPasswordNew() {
              
               
             </li>
+
+            
 	  				<li>
               <input type="text" name="" placeholder={t('user')} value={email}
               onChange={event =>
