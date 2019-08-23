@@ -40,7 +40,8 @@ const INITIAL_STATE = {
   refreshToken:null,
   verificationcode:"",
   success2:null,
-  confirmpassword:""
+  confirmpassword:"",
+  PasswordDoNotMatch:null
 };
 let errorstyle = {
   textAlign:"center",
@@ -106,7 +107,7 @@ ForgotPasswordNew() {
   
   onSubmit= event => {
     event.preventDefault();
-    
+    this.setState({PasswordDoNotMatch:null});
     this.setState({submitted:true}); 
     this.setState({error:null});
     this.setState({success:null});
@@ -114,8 +115,8 @@ ForgotPasswordNew() {
     if(this.state.isCodeSent)
     {
       if(password !== confirmpassword) {
-        let passworderror=this.props.t('PasswordDoNotMatch');
-        this.setState({error:passworderror});
+       
+        this.setState({PasswordDoNotMatch:true});
         this.setState({success:null})
           this.setState({submitted:false}); 
           event.preventDefault();
@@ -222,6 +223,11 @@ ForgotPasswordNew() {
                <h3 style={errorstyle}>
                  {
                    (this.state.error)?t("errormessage")+" : "+this.state.error:""
+                 }
+               </h3>
+               <h3 style={errorstyle}>
+                 {
+                   (this.state.PasswordDoNotMatch)?t("PasswordDoNotMatch"):""
                  }
                </h3>
                <h3 style={successstyle}>

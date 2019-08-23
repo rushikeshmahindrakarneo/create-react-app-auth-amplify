@@ -8,6 +8,9 @@ import Route from 'react-router-dom/Route'
 import signIn from './signIn';
 import SignUp from './SignUp';
 import ForgotPassword from './ForgotPassword'
+import { withTranslation, Trans } from 'react-i18next';
+
+
 
 class App extends Component {
 
@@ -40,5 +43,5 @@ class App extends Component {
   }
 }
 
-export default  App;
+export default withTranslation('common')(App); 
 
