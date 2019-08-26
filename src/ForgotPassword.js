@@ -19,8 +19,9 @@ import configurationData from './configurationData';
 
 
 setTranslations({ en, fr,es });
-setDefaultLanguage('en');
-setLanguageCookie();
+setDefaultLanguage( localStorage.getItem('currentlanguage')?localStorage.getItem('currentlanguage'):'en');
+
+//setLanguageCookie();
 const updateByPropertyName = (propertyName, value) => () => ({
   [propertyName]: value
 });
@@ -67,8 +68,17 @@ class ForgotPassword extends Component {
     super(props);
     this.ForgotPasswordNew = this.ForgotPasswordNew.bind(this);
     this.state = { ...INITIAL_STATE };
+   
   }
-
+componentDidMount(){
+  
+    
+  if(localStorage.getItem('currentlanguage'))
+  {
+    this.setState({language:localStorage.getItem('currentlanguage')});
+  }
+ 
+}
   
 
 
@@ -96,6 +106,7 @@ ForgotPasswordNew() {
   handleSetLanguage = (key) => () => {
     this.setState({language:key})
     setLanguage(key);
+    localStorage.setItem('currentlanguage',key);
   };
 
 
@@ -124,7 +135,7 @@ ForgotPasswordNew() {
       else{
         Auth.forgotPasswordSubmit(email, verificationcode, password)
         .then(data => {
-          console.log(data);
+         
           this.setState({success2:true}); 
           let vm=this;
           setTimeout(function(){

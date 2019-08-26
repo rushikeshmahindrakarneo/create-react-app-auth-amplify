@@ -17,8 +17,8 @@ import {
 import configurationData from './configurationData';
 
 setTranslations({ en, fr,es });
-setDefaultLanguage('en');
-setLanguage('es');
+setDefaultLanguage( localStorage.getItem('currentlanguage')?localStorage.getItem('currentlanguage'):'en');
+
 //setLanguageCookie();
 
 
@@ -66,6 +66,7 @@ class SignIn extends Component {
     super(props);
     this.signInNew = this.signInNew.bind(this);
     this.state = { ...INITIAL_STATE };
+  
     
   }
 
@@ -75,6 +76,13 @@ class SignIn extends Component {
         window.gapi.auth2.getAuthInstance() : 
         null;
     if (!ga) this.createScript();
+   
+    
+    if(localStorage.getItem('currentlanguage'))
+    {
+      this.setState({language:localStorage.getItem('currentlanguage')});
+    }
+   
     
 }
 
@@ -96,8 +104,7 @@ signInNew() {
 async getAWSCredentials(googleUser) {
   this.setState({submitted:true})
   const { id_token, expires_at } = googleUser.getAuthResponse();
-  console.log(id_token);
-  console.log(expires_at);
+  
   const profile = googleUser.getBasicProfile();
   let user = {
       email: profile.getEmail(),
@@ -109,7 +116,7 @@ async getAWSCredentials(googleUser) {
       { token: id_token, expires_at },
       user
   );
-  console.log( credentials);
+  
   this.setState(
     updateByPropertyName("email", user.email)
   )
@@ -149,7 +156,7 @@ initGapi() {
    
   
   handleSetLanguage = (key) => () => {
-    console.log(key);
+   
     this.setState({language:key})
     setLanguage(key);
     localStorage.setItem('currentlanguage',key);
@@ -220,7 +227,7 @@ initGapi() {
       headers.googletoken=this.state.refreshToken;
       headers.googletoken=this.state.accessToken;
     }
-    console.log('lambda');
+   
     fetch(configurationData.loginUrl, {
 			method: 'POST',
 			body: JSON.stringify({

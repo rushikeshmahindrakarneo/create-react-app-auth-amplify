@@ -19,8 +19,9 @@ import configurationData from './configurationData';
 
 
 setTranslations({ en, fr,es });
-setDefaultLanguage('en');
-setLanguageCookie();
+setDefaultLanguage( localStorage.getItem('currentlanguage')?localStorage.getItem('currentlanguage'):'en');
+
+//setLanguageCookie();
 
 
 
@@ -70,6 +71,7 @@ class SignUp extends Component {
     super(props);
     this.SignUpNew = this.SignUpNew.bind(this);
     this.state = { ...INITIAL_STATE };
+    
   }
 
   componentDidMount() {
@@ -77,6 +79,13 @@ class SignUp extends Component {
         window.gapi.auth2.getAuthInstance() : 
         null;
     if (!ga) this.createScript();
+    
+    
+    if(localStorage.getItem('currentlanguage'))
+    {
+      this.setState({language:localStorage.getItem('currentlanguage')});
+    }
+   
 }
 
 
@@ -103,6 +112,7 @@ SignUpNew() {
   handleSetLanguage = (key) => () => {
     this.setState({language:key})
     setLanguage(key);
+    localStorage.setItem('currentlanguage',key);
   };
 
 
@@ -115,8 +125,7 @@ SignUpNew() {
   onSubmit= event => {
     this.setState({submitted:true});
     const { email, password } = this.state;
-console.log(email);
-console.log(password);
+
 let attributes=
  {
     "email":email
