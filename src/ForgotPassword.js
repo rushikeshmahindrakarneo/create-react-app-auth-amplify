@@ -44,23 +44,7 @@ const INITIAL_STATE = {
   confirmpassword:"",
   PasswordDoNotMatch:null
 };
-let errorstyle = {
-  textAlign:"center",
-  color:"Red"
-};
-let successstyle = {
-  textAlign:"center",
-  color:"green"
-};
 
-
-
-let bottomLinksStyle={
-    marginTop: "5px",
-    fontSize: "14px",
-    padding: "0",
-    border: "none"
-};
 
 
 class ForgotPassword extends Component {
@@ -231,22 +215,22 @@ ForgotPasswordNew() {
   				<ul className="form-container">
             <li>
               
-               <h3 style={errorstyle}>
+               <h3 className="errorstyle">
                  {
                    (this.state.error)?t("errormessage")+" : "+this.state.error:""
                  }
                </h3>
-               <h3 style={errorstyle}>
+               <h3 className="errorstyle">
                  {
                    (this.state.PasswordDoNotMatch)?t("PasswordDoNotMatch"):""
                  }
                </h3>
-               <h3 style={successstyle}>
+               <h3 className="successstyle">
                  {
                    (this.state.success)?t("RequestPasswordSuccess").replace("####emailhere####",this.state.email):""
                  }
                </h3>   
-               <h3 style={successstyle}>
+               <h3 className="successstyle">
                  {
                    (this.state.success2)?t("PasswordChangeSuccess"):""
                  }
@@ -295,8 +279,8 @@ ForgotPasswordNew() {
                 
                 }</button>
              <div className="col-sm-12">
-               <div className="col-sm-6"><button type="button" style={bottomLinksStyle} onClick={() => this.changeState("signIn")}>{t('LoginLabel')}</button></div>
-               <div className="col-sm-6"><button type="button" style={bottomLinksStyle} onClick={() => this.changeState("signUp")}>{t('NewUserLabel')}</button></div>
+               <div className="col-sm-6"><button type="button" className="bottomLinksStyle" onClick={() => this.changeState("signIn")}>{t('LoginLabel')}</button></div>
+               <div className="col-sm-6"><button type="button" className="bottomLinksStyle" onClick={() => this.changeState("signUp")}>{t('NewUserLabel')}</button></div>
              </div>
              
               

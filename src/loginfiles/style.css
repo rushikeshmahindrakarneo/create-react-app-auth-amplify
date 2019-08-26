@@ -148,3 +148,28 @@ footer a:hover::after{width: 100%; opacity: 1; transition: all 0.5s ease; -moz-t
 .iconExclamation {position: absolute; top: 46.5%; left:20px; width: 30px; height: 30px;}
 .containerTextInactivity {background: #fff; font-size:13px; width: 100%; height: 100%; margin-top: 30px; border-radius: 8px; padding: 25px; padding-left: 65px; padding-right: 25px;}
 .aButton {height:45px; line-height: 2.2; width: 67%; margin-left: 57px;}
+
+/*Style Added by rushi */
+.errorstyle  {
+    text-align:center;
+    color:Red
+  }
+  .successstyle  {
+    text-align:center;
+    color:green
+  }  
+ 
+  .googlebutton{
+    background-color: white;
+    padding: 4px;
+    border: 1px solid;
+    border-radius: 12px
+  }
+  
+  .bottomLinksStyle{
+    margin-top: 5px ;
+    font-size: 14px ;
+    padding: 0 ;
+    border: none ;
+  }
+/*Style Added by rushi */
