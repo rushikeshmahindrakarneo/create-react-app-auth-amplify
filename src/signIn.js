@@ -203,9 +203,9 @@ initGapi() {
     }
     if(this.state.idToken!==null && this.state.idToken!=="")
     {
-      headers.googletoken=this.state.idToken;
-      headers.googletoken=this.state.refreshToken;
-      headers.googletoken=this.state.accessToken;
+      headers.idToken=this.state.idToken;
+      headers.refreshToken=this.state.refreshToken;
+      headers.accessToken=this.state.accessToken;
     }
    
     fetch(configurationData.loginUrl, {
