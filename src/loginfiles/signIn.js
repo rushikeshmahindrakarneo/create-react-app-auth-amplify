@@ -225,7 +225,7 @@ localStorage.setItem("currentlanguage",this.state.language);
           this.setState({success:"True"})
           this.setState({error:null})
           this.setState({submitted:false});
-          window.location.href = configurationData.redirectUrl2Url+'?token='+json.tokenId;
+          window.location.href = configurationData.redirectUrl2+'?token='+json.tokenId;
         }
         else
         {
