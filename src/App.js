@@ -10,6 +10,8 @@ import Route from 'react-router-dom/Route'
 import SignUp from './loginfiles/SignUp';
 import ForgotPassword from './loginfiles/ForgotPassword'
 
+
+
 class App extends Component {
 
   componentWillMount() {
