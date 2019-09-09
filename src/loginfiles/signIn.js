@@ -33,7 +33,8 @@ const INITIAL_STATE = {
   googletoken:null,
   accessToken:null,
   idToken:null,
-  refreshToken:null
+  refreshToken:null,
+  rememberMe:false
 };
 
 class SignIn extends Component {
@@ -42,6 +43,7 @@ class SignIn extends Component {
     super(props);
     this.signInNew = this.signInNew.bind(this);
     this.state = { ...INITIAL_STATE };
+   
   }
 
   componentDidMount() {
@@ -55,9 +57,17 @@ class SignIn extends Component {
     {
       this.setState({language:localStorage.getItem('currentlanguage')});
     } 
+    if(localStorage.getItem('rememberMe')!==null && localStorage.getItem('rememberMe')==='true')
+    {
+      this.setState({rememberMe:true});
+      this.setState({email:localStorage.getItem('email')});
+      this.setState({companyname:localStorage.getItem('companyname')});
+      //conso
+    }
   }
 
   signInNew() {
+    
     this.setState({submitted:false})
     const ga = window.gapi.auth2.getAuthInstance();
     ga.signIn().then(
@@ -89,6 +99,7 @@ class SignIn extends Component {
     )
 
     localStorage.clear();
+
     if(this.state.companyname===null || this.state.companyname==="")
       this.setState({error:"Please enter company name"})
     else   
@@ -130,6 +141,20 @@ class SignIn extends Component {
   }
 
   onSubmit= event => {
+    console.log(this.state.rememberMe);
+    if(this.state.rememberMe===true)
+    {
+      localStorage.setItem('email',this.state.email);
+      localStorage.setItem('companyname',this.state.companyname);
+      localStorage.setItem('rememberMe',this.state.rememberMe);
+    }
+    else
+    {
+      localStorage.removeItem('email');
+      localStorage.removeItem('companyname');
+      localStorage.removeItem('rememberMe');
+
+    }
     this.setState({submitted:true});
     const { email, password } = this.state;
 
@@ -149,6 +174,12 @@ class SignIn extends Component {
           
          localStorage.clear();
 localStorage.setItem("currentlanguage",this.state.language);
+if(this.state.rememberMe)
+{
+  localStorage.setItem('email',this.state.email);
+  localStorage.setItem('companyname',this.state.companyname);
+  localStorage.setItem('rememberMe',this.state.rememberMe);
+}
          this.setState(
           updateByPropertyName("idToken",user.signInUserSession.idToken.jwtToken)
         );
@@ -298,6 +329,16 @@ localStorage.setItem("currentlanguage",this.state.language);
                       updateByPropertyName("companyname", event.target.value)
                     )
                   } required/>
+                  </li>
+                  <li>
+                  <input type="checkbox" name=""
+                  
+                  onChange={event =>
+                    this.setState(
+                      updateByPropertyName("rememberMe", event.target.checked)
+                    )
+                  } defaultChecked={Boolean(localStorage.getItem('rememberMe'))===false?false:true}/>
+                   <label>Remember Me</label>
                   </li>
                 <li>
                   <button className="btn btn-default" disabled={this.state.submitted}>{t('login')}</button>

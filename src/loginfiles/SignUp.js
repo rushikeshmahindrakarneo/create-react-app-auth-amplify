@@ -24,6 +24,7 @@ const updateByPropertyName = (propertyName, value) => () => ({
 const INITIAL_STATE = {
   email: "",
   password: "",
+  confirmpassword:"",
   companyname:"",
   language:'en',
   error: null,
@@ -80,33 +81,43 @@ class SignUp extends Component {
   }
   
   onSubmit= event => {
-    this.setState({submitted:true});
-    const { email, password } = this.state;
+    if((this.state.password!=="" && this.state.confirmpassword!=="" && this.state.password!==this.state.confirmpassword))
+    {
 
-        Auth.signUp(
-            email, 
-            password,
-            email
-            )
-          .then(user => {
-            this.setState({success:true})
-            this.setState({submitted:false}); 
-            this.setState({error:null});
-            this.setState({email:""})
-            this.setState({password:""})
-          })
-          .catch(err => {
-            this.setState({error:err.message})
-            this.setState({success:null})
-            this.setState({submitted:false}); 
-          });
+    }
+    else
+    {
+      this.setState({submitted:true});
+      const { email, password } = this.state;
+  
+          Auth.signUp(
+              email, 
+              password,
+              email
+              )
+            .then(user => {
+              this.setState({success:true})
+              this.setState({submitted:false}); 
+              this.setState({error:null});
+              this.setState({email:""})
+              this.setState({password:""})
+              this.setState({confirmpassword:""})
+
+            })
+            .catch(err => {
+              this.setState({error:err.message})
+              this.setState({success:null})
+              this.setState({submitted:false}); 
+            });
+    }
+    
 
         event.preventDefault();
   };
 
   render() {
 
-    const { email, password } = this.state;
+    const { email, password,confirmpassword } = this.state;
     const { t } = this.props;
     return (
      
@@ -156,7 +167,12 @@ class SignUp extends Component {
                       {
                         (this.state.success)?t("successmessagesignup"):""
                       }
-                    </h3>          
+                    </h3>       
+                    <h3 className="errorstyle">
+                      {
+    (this.state.password!=="" && this.state.confirmpassword!=="" && this.state.password!==this.state.confirmpassword)?t("PasswordDoNotMatch"):""
+                      }
+                      </h3>   
                   
                     
                   </li>
@@ -171,6 +187,14 @@ class SignUp extends Component {
                     onChange={event =>
                       this.setState(
                         updateByPropertyName("password", event.target.value)
+                      )
+                    } required/>
+                    </li>
+                    <li>
+                    <input type="password" name="" placeholder={t('ConfirmPassword')}  value={confirmpassword}
+                    onChange={event =>
+                      this.setState(
+                        updateByPropertyName("confirmpassword", event.target.value)
                       )
                     } required/>
                     </li>
