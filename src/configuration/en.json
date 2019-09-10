@@ -17,5 +17,8 @@
     "verificationcode":"Verification Code",
     "NewPassword":"New Password",
     "ConfirmPassword":"Confirm Password",
-    "PasswordDoNotMatch":"Passwords do not match"
+    "PasswordDoNotMatch":"Passwords do not match",
+    "InvalidCredentials":"Username/client id combination not found.",
+    "UserNotVerified":"User is not confirmed.",
+    "UserAlreadyExists":"User already exists"
 }

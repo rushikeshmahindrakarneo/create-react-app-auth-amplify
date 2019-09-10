@@ -47,6 +47,7 @@ class SignIn extends Component {
   }
 
   componentDidMount() {
+   
     this.handleSetLanguage(this.state.language);
     const ga = window.gapi && window.gapi.auth2 ? 
         window.gapi.auth2.getAuthInstance() : 
@@ -193,7 +194,21 @@ if(this.state.rememberMe)
         }        
       })
       .catch(err => {
-        this.setState({error:err.message})
+        console.log(err);
+        
+        if(err.code==="UserNotFoundException")
+        {
+          this.setState({error:this.props.t('InvalidCredentials')})
+        }
+        else if(err.code==="UserNotConfirmedException")
+        {
+          this.setState({error:this.props.t('UserNotVerified')})
+        }
+        else
+        {
+          this.setState({error:err.message})
+        }
+        
         this.setState({success:null})
         this.setState({submitted:false}); 
       });

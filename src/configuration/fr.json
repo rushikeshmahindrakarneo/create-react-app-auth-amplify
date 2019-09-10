@@ -17,5 +17,8 @@
     "verificationcode":"Code de vérification",
     "NewPassword":"nouveau mot de passe",
     "ConfirmPassword":"Confirmez le mot de passe",
-    "PasswordDoNotMatch":"Les mots de passe ne correspondent pas"
+    "PasswordDoNotMatch":"Les mots de passe ne correspondent pas",
+    "InvalidCredentials":"Combinaison nom d'utilisateur / identifiant client introuvable.",
+    "UserNotVerified":"L'utilisateur n'est pas confirmé.",
+    "UserAlreadyExists":"L'utilisateur existe déjà"
 }

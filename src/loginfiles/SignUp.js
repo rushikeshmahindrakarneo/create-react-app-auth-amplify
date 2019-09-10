@@ -30,10 +30,14 @@ const INITIAL_STATE = {
   error: null,
   submitted:false,
   success:null,
+  userconfirmed:false,
   googletoken:null,
   accessToken:null,
   idToken:null,
-  refreshToken:null
+  refreshToken:null,
+  iscodesent:false,
+  iscodeserent:false,
+  verificationcode:null
 };
 
 class SignUp extends Component {
@@ -54,6 +58,7 @@ class SignUp extends Component {
     {
       this.setState({language:localStorage.getItem('currentlanguage')});
     }
+    //this.enterVerificationCode();
 }
 
   SignUpNew() {
@@ -99,13 +104,20 @@ class SignUp extends Component {
               this.setState({success:true})
               this.setState({submitted:false}); 
               this.setState({error:null});
-              this.setState({email:""})
+              //this.setState({email:""})
               this.setState({password:""})
               this.setState({confirmpassword:""})
-
+              this.setState({iscodesent:true});
             })
             .catch(err => {
-              this.setState({error:err.message})
+              if(err.code==="UsernameExistsException")
+              {
+                this.setState({error:this.props.t('UserAlreadyExists')})
+              }
+              else
+              {
+                this.setState({error:err.message})
+              }              
               this.setState({success:null})
               this.setState({submitted:false}); 
             });
@@ -114,6 +126,45 @@ class SignUp extends Component {
 
         event.preventDefault();
   };
+
+  resendVerificationCode()
+  {
+    this.setState({submitted:true}); 
+    this.setState({iscoderesent:false})
+    Auth.resendSignUp(this.state.email).then(() => {
+              this.setState({iscoderesent:true})
+              this.setState({submitted:false}); 
+              this.setState({error:null});
+    }).catch(e => {
+      this.setState({error:e.message});
+      this.setState({submitted:false}); 
+    });
+  }
+
+  verifyCode()
+  {
+    if(this.state.verificationcode!==null && this.state.verificationcode!=="")
+    {
+      Auth.confirmSignUp(this.state.email, this.state.verificationcode, {
+        // Optional. Force user confirmation irrespective of existing alias. By default set to True.
+        forceAliasCreation: true    
+    }).then((data)=>{
+
+      setTimeout(
+        function() {
+          this.changeState("signIn");
+        }
+        .bind(this),
+        3000
+    );
+      
+    }).catch(err => console.log(err));
+    }
+    else
+    {
+      this.setState({error:"Please enter verification code recieved on email to continue."})
+    }
+  }
 
   render() {
 
@@ -167,12 +218,22 @@ class SignUp extends Component {
                       {
                         (this.state.success)?t("successmessagesignup"):""
                       }
+                    </h3>
+                    <h3 className="successstyle">
+                      {
+                        (this.state.iscoderesent)?"Verification Code Has Been Resent":""
+                      }
                     </h3>       
                     <h3 className="errorstyle">
                       {
     (this.state.password!=="" && this.state.confirmpassword!=="" && this.state.password!==this.state.confirmpassword)?t("PasswordDoNotMatch"):""
                       }
                       </h3>   
+                      <h3 className="successstyle">
+                        {
+                          (this.state.userconfirmed)?"User confirmed":""
+                        }
+                      </h3>
                   
                     
                   </li>
@@ -182,7 +243,9 @@ class SignUp extends Component {
                       this.setState(updateByPropertyName("email", event.target.value))
                     } required/>
                     </li>
-                  <li>
+
+                    {
+                      (!this.state.iscodesent)?(<><li>
                     <input type="password" name="" placeholder={t('password')}  value={password}
                     onChange={event =>
                       this.setState(
@@ -197,12 +260,42 @@ class SignUp extends Component {
                         updateByPropertyName("confirmpassword", event.target.value)
                       )
                     } required/>
+                    </li></>):""
+                    }
+                 
+                    <li>
+                      {
+                        (this.state.iscodesent)?(<input type="text" name="" placeholder="Verification Code" 
+                        onChange={event =>
+                          this.setState(
+                            updateByPropertyName("verificationcode", event.target.value)
+                          )
+                        } required/>):""
+                      }                    
                     </li>
                     <li>
-                    <button className="btn btn-default" disabled={this.state.submitted}>{t('signup')}</button>
+
+                      {
+                        (!this.state.iscodesent)?(<button className="btn btn-default" disabled={this.state.submitted}>{t('signup')}</button>):("")
+
+                      }
+                      {
+                        (this.state.iscodesent)?(<>
+                        <button type="button" onClick={()=>this.verifyCode()} className="btn btn-default" disabled={this.state.submitted}>Verify</button>
+                        <br/><br/>
+                        <button type="button" onClick={()=>this.resendVerificationCode()} className="btn btn-default" disabled={this.state.submitted}>Resend Verification Code</button>
+                        </>):("")
+
+                      }
+                      
+                      
+                    
+
+                    
                   <div className="col-sm-12">
                     <div className="col-sm-6"><button type="button" className="bottomLinksStyle" onClick={() => this.changeState("signIn")}>{t('LoginLabel')}</button></div>
                     <div className="col-sm-6"><button type="button" className="bottomLinksStyle" onClick={() => this.changeState("forgotPassword")}>{t('ForgotPasswordLabel')}</button></div>
+                    
                   </div>
                   
                     

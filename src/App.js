@@ -10,7 +10,7 @@ import {BrowserRouter as Router} from 'react-router-dom'
 //import Route from 'react-router-dom/Route'
 
 import SignUp from './loginfiles/SignUp';
-import ForgotPassword from './loginfiles/ForgotPassword'
+import ForgotPassword from './loginfiles/ForgotPassword';
 
 const Route = require("react-router-dom").Route;
 class App extends Component {
@@ -19,6 +19,7 @@ class App extends Component {
     amplifyCustomUi.setSignIn(SignIn);
     amplifyCustomUi.setSignUp(SignUp);
     amplifyCustomUi.setForgotPassword(ForgotPassword);
+    
   }
 
   render() {
