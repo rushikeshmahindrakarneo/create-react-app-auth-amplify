@@ -20,5 +20,12 @@
     "PasswordDoNotMatch":"Les mots de passe ne correspondent pas",
     "InvalidCredentials":"Combinaison nom d'utilisateur / identifiant client introuvable.",
     "UserNotVerified":"L'utilisateur n'est pas confirmé.",
-    "UserAlreadyExists":"L'utilisateur existe déjà"
+    "UserAlreadyExists":"L'utilisateur existe déjà",
+    "verificationcodevalidation":"Veuillez entrer le code de vérification reçu par courrier électronique pour continuer.",
+    "verificationcoderesentsuccess": "Le code de vérification a été renvoyé",
+    "UserConfirmSuccess":"Utilisateur confirmé",
+    "VerificationCode":"Code de vérification",
+    "VerifyButton":"Vérifier",
+    "ResendVerificationCodeButton":"Renvoyer le code de vérification",
+    "InvalidVerificationCode":"Code de vérification incorrect fourni, veuillez réessayer."
 }

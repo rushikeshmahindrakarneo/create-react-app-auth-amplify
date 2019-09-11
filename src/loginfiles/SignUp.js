@@ -22,6 +22,7 @@ const updateByPropertyName = (propertyName, value) => () => ({
 });
 
 const INITIAL_STATE = {
+  InvalidVerificationCode:false,
   email: "",
   password: "",
   confirmpassword:"",
@@ -37,18 +38,24 @@ const INITIAL_STATE = {
   refreshToken:null,
   iscodesent:false,
   iscodeserent:false,
-  verificationcode:null
+  verificationcode:null,
+  resendcodeactive:false,
+  count:60,
+  isunmounted:false
 };
 
 class SignUp extends Component {
   constructor(props) {
     super(props);
+    this._isMounted=false;
+
     this.SignUpNew = this.SignUpNew.bind(this);
     this.state = { ...INITIAL_STATE };
     
   }
 
   componentDidMount() {
+    this._isMounted = true;
     const ga = window.gapi && window.gapi.auth2 ? 
         window.gapi.auth2.getAuthInstance() : 
         null;
@@ -59,6 +66,7 @@ class SignUp extends Component {
       this.setState({language:localStorage.getItem('currentlanguage')});
     }
     //this.enterVerificationCode();
+  //  this.handleStartStop();
 }
 
   SignUpNew() {
@@ -84,7 +92,34 @@ class SignUp extends Component {
     const { changeAuthState } = this.props;
     changeAuthState(type, event);
   }
-  
+
+  handleStartStop() {
+
+    var vm=this;
+    function timer() {
+      console.log(vm.state.count);
+      console.log(vm.state.isunmounted)
+      if(vm.state.count!==0 && vm._isMounted)
+      {
+        vm.setState({
+          count: (vm.state.count -= 1) // mutating state directly here
+        });
+      }
+      else
+      {
+        console.log('done');
+        clearInterval(counter);
+        if(vm._isMounted!==false)
+        vm.setState({resendcodeactive:false});
+        
+      }
+      
+    }
+
+   
+    let counter = setInterval(timer, 1000);
+    this.state.count = 60; // mutating state directly here
+  }
   onSubmit= event => {
     if((this.state.password!=="" && this.state.confirmpassword!=="" && this.state.password!==this.state.confirmpassword))
     {
@@ -108,6 +143,8 @@ class SignUp extends Component {
               this.setState({password:""})
               this.setState({confirmpassword:""})
               this.setState({iscodesent:true});
+              this.handleStartStop();
+              this.setState({resendcodeactive:true});
             })
             .catch(err => {
               if(err.code==="UsernameExistsException")
@@ -132,23 +169,32 @@ class SignUp extends Component {
     this.setState({submitted:true}); 
     this.setState({iscoderesent:false})
     Auth.resendSignUp(this.state.email).then(() => {
-              this.setState({iscoderesent:true})
-              this.setState({submitted:false}); 
-              this.setState({error:null});
+      this.setState({iscoderesent:true})
+      this.setState({submitted:false}); 
+      this.setState({error:null});
+      this.handleStartStop();
+      this.setState({resendcodeactive:true});
+             // this.setState({act})
     }).catch(e => {
       this.setState({error:e.message});
       this.setState({submitted:false}); 
     });
   }
-
+  componentWillUnmount()
+  {
+   this._isMounted=false;
+  }
   verifyCode()
   {
+    this.setState({submitted:true})
     if(this.state.verificationcode!==null && this.state.verificationcode!=="")
     {
       Auth.confirmSignUp(this.state.email, this.state.verificationcode, {
         // Optional. Force user confirmation irrespective of existing alias. By default set to True.
         forceAliasCreation: true    
     }).then((data)=>{
+      this.setState({userconfirmed:true})
+      this.setState({success:false})
 
       setTimeout(
         function() {
@@ -158,11 +204,21 @@ class SignUp extends Component {
         3000
     );
       
-    }).catch(err => console.log(err));
+    }).catch(err => {
+      if(err.code==="CodeMismatchException")
+      {
+        this.setState({InvalidVerificationCode:true,error:null,submitted:false,success:false})
+      }
+      else
+      {
+        this.setState({InvalidVerificationCode:false,error:err.message,submitted:false,success:false});
+      }
+      console.log(err)});
     }
     else
     {
-      this.setState({error:"Please enter verification code recieved on email to continue."})
+      this.setState({error:this.props.t("verificationcodevalidation")})
+      this.setState({submitted:false})
     }
   }
 
@@ -208,7 +264,11 @@ class SignUp extends Component {
               <form onSubmit={this.onSubmit}>
                 <ul className="form-container">
                   <li>
-                    
+                  <h3 className="errorstyle">
+                    {
+                      (this.state.InvalidVerificationCode)?t("InvalidVerificationCode"):""
+                    }
+                  </h3>
                     <h3 className="errorstyle">
                       {
                         (this.state.error)?t("errormessage")+" : "+this.state.error:""
@@ -221,19 +281,20 @@ class SignUp extends Component {
                     </h3>
                     <h3 className="successstyle">
                       {
-                        (this.state.iscoderesent)?"Verification Code Has Been Resent":""
+                        (this.state.iscoderesent)?t("verificationcoderesentsuccess"):""
                       }
                     </h3>       
                     <h3 className="errorstyle">
                       {
-    (this.state.password!=="" && this.state.confirmpassword!=="" && this.state.password!==this.state.confirmpassword)?t("PasswordDoNotMatch"):""
+                        (this.state.password!=="" && this.state.confirmpassword!=="" && this.state.password!==this.state.confirmpassword)?t("PasswordDoNotMatch"):""
                       }
                       </h3>   
                       <h3 className="successstyle">
                         {
-                          (this.state.userconfirmed)?"User confirmed":""
+                          (this.state.userconfirmed)?t("UserConfirmSuccess") :""
                         }
                       </h3>
+                      
                   
                     
                   </li>
@@ -265,7 +326,7 @@ class SignUp extends Component {
                  
                     <li>
                       {
-                        (this.state.iscodesent)?(<input type="text" name="" placeholder="Verification Code" 
+                        (this.state.iscodesent)?(<input type="text" name="" placeholder={t("VerificationCode")} 
                         onChange={event =>
                           this.setState(
                             updateByPropertyName("verificationcode", event.target.value)
@@ -281,9 +342,9 @@ class SignUp extends Component {
                       }
                       {
                         (this.state.iscodesent)?(<>
-                        <button type="button" onClick={()=>this.verifyCode()} className="btn btn-default" disabled={this.state.submitted}>Verify</button>
+                        <button type="button" onClick={()=>this.verifyCode()} className="btn btn-default" disabled={this.state.submitted}>{t("VerifyButton")}</button>
                         <br/><br/>
-                        <button type="button" onClick={()=>this.resendVerificationCode()} className="btn btn-default" disabled={this.state.submitted}>Resend Verification Code</button>
+                        <button type="button" onClick={()=>this.resendVerificationCode()} className="btn btn-default" disabled={this.state.submitted || this.state.resendcodeactive}>{t("ResendVerificationCodeButton")}</button>
                         </>):("")
 
                       }

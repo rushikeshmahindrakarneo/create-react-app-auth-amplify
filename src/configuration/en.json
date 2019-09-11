@@ -20,5 +20,12 @@
     "PasswordDoNotMatch":"Passwords do not match",
     "InvalidCredentials":"Username/client id combination not found.",
     "UserNotVerified":"User is not confirmed.",
-    "UserAlreadyExists":"User already exists"
+    "UserAlreadyExists":"User already exists",
+    "verificationcodevalidation":"Please enter verification code recieved on email to continue.",
+    "verificationcoderesentsuccess": "Verification Code Has Been Resent",
+    "UserConfirmSuccess":"User confirmed",
+    "VerificationCode":"Verification Code",
+    "VerifyButton":"Verify",
+    "ResendVerificationCodeButton":"Resend Verification Code",
+    "InvalidVerificationCode":"Invalid verification code provided, please try again."
 }
